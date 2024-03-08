@@ -27,7 +27,8 @@ export class UsersService {
   findOne(id: string): User {
     const user = this.users.get(id);
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      // throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      return null;
     }
     return user;
   }
@@ -46,10 +47,11 @@ export class UsersService {
     return user;
   }
 
-  remove(id: string): void {
+  remove(id: string): boolean {
     if (!this.users.has(id)) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      return false;
     }
     this.users.delete(id);
+    return true;
   }
 }

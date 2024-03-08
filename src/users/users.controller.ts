@@ -63,7 +63,17 @@ export class UsersController {
       throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
     }
 
-    return this.usersService.findOne(id);
+    // return this.usersService.findOne(id);
+    const result = this.usersService.findOne(id);
+    if (!result) {
+      throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
+    }
+    return result;
+
+    // const result = this.usersService.remove(id);
+    // if (!result) {
+    //   throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
+    // }
   }
 
   @Patch(':id')
@@ -108,10 +118,9 @@ export class UsersController {
       throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
     }
 
-    try {
-      this.usersService.remove(id);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    const result = this.usersService.remove(id);
+    if (!result) {
+      throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
     }
   }
 }
