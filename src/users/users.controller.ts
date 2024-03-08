@@ -16,6 +16,8 @@ import { User } from './interfaces/usersInterfaces';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-responce';
 
+import { validate } from 'uuid';
+
 @ApiTags('user')
 @Controller('user')
 export class UsersController {
@@ -32,7 +34,7 @@ export class UsersController {
           HttpStatus.BAD_REQUEST,
         );
       }
-      const newUser = await this.usersService.create(createUserDto);
+      const newUser = this.usersService.create(createUserDto);
       return newUser;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -57,15 +59,11 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async findOne(@Param('id') id: string): Promise<User> {
-    try {
-      const user: User | null = await this.usersService.findOne(id);
-      if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      }
-      return user;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (!validate(id)) {
+      throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
     }
+
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
@@ -106,10 +104,14 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async remove(@Param('id') id: string): Promise<void> {
+    if (!validate(id)) {
+      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
+    }
+
     try {
       this.usersService.remove(id);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
   }
 }

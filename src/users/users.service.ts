@@ -24,8 +24,12 @@ export class UsersService {
     return Array.from(this.users.values());
   }
 
-  findOne(id: string): User | null {
-    return this.users.get(id) || null;
+  findOne(id: string): User {
+    const user = this.users.get(id);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return user;
   }
 
   updatePassword(
@@ -42,11 +46,10 @@ export class UsersService {
     return user;
   }
 
-  remove(id: string): boolean {
+  remove(id: string): void {
     if (!this.users.has(id)) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     this.users.delete(id);
-    return true;
   }
 }
