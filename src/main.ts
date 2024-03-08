@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const port = process.env.PORT || 4001;
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+
+  const port = configService.get<number>('PORT') || 4001;
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
@@ -16,6 +19,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(port);
-  console.log('port:', port);
+  console.log('Server is running on port:', port);
 }
 bootstrap();

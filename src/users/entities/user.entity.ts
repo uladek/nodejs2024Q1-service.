@@ -1,1 +1,10 @@
-export class User {}
+// import { IUser } from '../interfaces/usersInterfaces';
+
+export class UserEntity {
+  id: string;
+  login: string;
+  password: string;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}

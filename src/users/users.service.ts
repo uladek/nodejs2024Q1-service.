@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './interfaces/usersInterfaces';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private users: Map<string, User> = new Map<string, User>();
+
+  create(createUserDto: CreateUserDto): User {
+    const newUser: User = {
+      id: randomUUID(),
+      login: createUserDto.login,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    this.users.set(newUser.id, newUser);
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(): User[] {
+    return Array.from(this.users.values());
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string): User | null {
+    return this.users.get(id) || null;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  updatePassword(
+    id: string,
+    newPassword: string,
+    oldPassword: string,
+  ): User | null {
+    const user = this.users.get(id);
+    if (!user) return null;
+    if (user.password !== oldPassword) return null;
+    user.password = newPassword;
+    user.version += 1;
+    user.updatedAt = Date.now();
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string): boolean {
+    if (!this.users.has(id)) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    this.users.delete(id);
+    return true;
   }
 }

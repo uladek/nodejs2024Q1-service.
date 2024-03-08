@@ -1,17 +1,18 @@
 export interface User {
-  id: string;
+  id: string; // uuid v4
   login: string;
-  version: number;
-  createdAt: number;
-  updatedAt: number;
+  password?: string;
+  version: number; // integer number, increments on update
+  createdAt: number; // timestamp of creation
+  updatedAt: number; // timestamp of last update
 }
 
-export interface CreateUserDto {
-  login: string;
-  password: string;
-}
+// export interface ICreateUserDto {
+//   login: string;
+//   password: string;
+// }
 
-export interface UpdatePasswordDto {
-  oldPassword: string;
-  newPassword: string;
-}
+// export interface IUpdatePasswordDto {
+//   oldPassword: string;
+//   newPassword: string;
+// }
