@@ -63,17 +63,11 @@ export class UsersController {
       throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
     }
 
-    // return this.usersService.findOne(id);
     const result = this.usersService.findOne(id);
     if (!result) {
       throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
     }
     return result;
-
-    // const result = this.usersService.remove(id);
-    // if (!result) {
-    //   throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
-    // }
   }
 
   @Patch(':id')
@@ -86,11 +80,13 @@ export class UsersController {
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
     try {
-      const { oldPassword, newPassword } = updatePasswordDto;
+      if (!validate(id)) {
+        throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
+      }
+
       const updatedUser = this.usersService.updatePassword(
         id,
-        newPassword,
-        oldPassword,
+        updatePasswordDto,
       );
       if (!updatedUser) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);

@@ -8,3 +8,13 @@ export class UserEntity {
   createdAt: number;
   updatedAt: number;
 }
+
+export type UserEntityTyoe = Omit<UserEntity, 'password'>;
+
+export class UserResponce implements UserEntityTyoe {
+  id: string;
+  login: string;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}
