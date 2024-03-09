@@ -9,6 +9,7 @@ import {
   HttpException,
   HttpStatus,
   HttpCode,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -71,7 +72,7 @@ export class UsersController {
     return result;
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 404, description: 'Not Found' })

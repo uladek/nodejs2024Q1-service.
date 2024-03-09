@@ -4,23 +4,34 @@ import { User } from './interfaces/usersInterfaces';
 import { randomUUID } from 'crypto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { plainToClass } from 'class-transformer';
-import { UserResponce, UserEntityTyoe } from './entities/user.entity';
+import {
+  UserResponce,
+  UserEntityTyoe,
+  UserEntity,
+} from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   private users: Map<string, User> = new Map<string, User>();
 
   create(createUserDto: CreateUserDto): UserEntityTyoe {
-    const newUser: User = {
+    const { password, ...userData } = createUserDto;
+    const newUser: UserEntityTyoe = {
       id: randomUUID(),
-      login: createUserDto.login,
+      ...userData,
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
     this.users.set(newUser.id, newUser);
     return plainToClass(UserResponce, newUser);
-    // return newUser;
+    // return {
+    //   id: newUser.id,
+    //   login: newUser.login,
+    //   version: newUser.version,
+    //   createdAt: newUser.createdAt,
+    //   updatedAt: newUser.updatedAt,
+    // };
   }
 
   findAll(): User[] {
@@ -62,6 +73,5 @@ export class UsersService {
     }
     this.users.delete(id);
     return true;
-
   }
 }
