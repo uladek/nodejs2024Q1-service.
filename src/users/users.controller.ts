@@ -8,6 +8,7 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -98,18 +99,19 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiParam({
     name: 'id',
     description: 'User ID',
-    schema: {
-      type: 'string',
-      format: 'uuid',
-    },
+    // schema: {
+    //   type: 'string',
+    //   format: 'uuid',
+    // },
   })
   @ApiResponse({ status: 204, description: 'No Content' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: string) {
     if (!validate(id)) {
       throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
     }
@@ -118,5 +120,6 @@ export class UsersController {
     if (!result) {
       throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
     }
+    // return null;
   }
 }

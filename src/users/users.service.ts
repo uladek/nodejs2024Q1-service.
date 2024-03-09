@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './interfaces/usersInterfaces';
 import { randomUUID } from 'crypto';
@@ -33,6 +33,7 @@ export class UsersService {
       return null;
     }
     return user;
+    // return plainToClass(UserResponce, user);
   }
 
   updatePassword(
@@ -61,5 +62,6 @@ export class UsersService {
     }
     this.users.delete(id);
     return true;
+
   }
 }
