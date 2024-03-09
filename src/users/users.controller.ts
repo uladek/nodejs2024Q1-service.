@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpException,
@@ -15,7 +14,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/usersInterfaces';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-responce';
 
 import { validate } from 'uuid';
@@ -48,7 +47,7 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   async findAll(): Promise<User[]> {
     try {
-      const users = await this.usersService.findAll();
+      const users = this.usersService.findAll();
       return users;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -77,26 +76,26 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   async updatePassword(
     @Param('id') id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
-    try {
-      if (!validate(id)) {
-        throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
-      }
-
-      const updatedUser = this.usersService.updatePassword(
-        id,
-        updatePasswordDto,
-      );
-      if (!updatedUser) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      }
-      return updatedUser;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    if (!validate(id)) {
+      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
     }
+
+    const user = await this.usersService.findOne(id);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (user.password !== updatePasswordDto.oldPassword) {
+      throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
+    }
+
+    const updatedUser = this.usersService.updatePassword(id, updatePasswordDto);
+    return updatedUser;
   }
 
   @Delete(':id')

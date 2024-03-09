@@ -1,22 +1,18 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './interfaces/usersInterfaces';
 import { randomUUID } from 'crypto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { plainToClass } from 'class-transformer';
-import {
-  UserResponce,
-  UserEntityTyoe,
-  UserEntity,
-} from './entities/user.entity';
+import { UserResponse } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   private users: Map<string, User> = new Map<string, User>();
 
-  create(createUserDto: CreateUserDto): UserEntityTyoe {
-    const { password, ...userData } = createUserDto;
-    const newUser: UserEntityTyoe = {
+  create(createUserDto: CreateUserDto): UserResponse {
+    const { ...userData } = createUserDto;
+    const newUser: User = {
       id: randomUUID(),
       ...userData,
       version: 1,
@@ -24,14 +20,7 @@ export class UsersService {
       updatedAt: Date.now(),
     };
     this.users.set(newUser.id, newUser);
-    return plainToClass(UserResponce, newUser);
-    // return {
-    //   id: newUser.id,
-    //   login: newUser.login,
-    //   version: newUser.version,
-    //   createdAt: newUser.createdAt,
-    //   updatedAt: newUser.updatedAt,
-    // };
+    return plainToClass(UserResponse, newUser);
   }
 
   findAll(): User[] {
@@ -44,16 +33,10 @@ export class UsersService {
       return null;
     }
     return user;
-    // return plainToClass(UserResponce, user);
   }
 
-  updatePassword(
-    id: string,
-    updatePasswordDto: UpdatePasswordDto,
-  ): User | null {
+  updatePassword(id: string, updatePasswordDto: UpdatePasswordDto): User {
     const user = this.users.get(id);
-    if (!user) return null;
-    if (user.password !== updatePasswordDto.oldPassword) return null;
 
     const updatedUser: User = {
       ...user,
@@ -63,8 +46,7 @@ export class UsersService {
     };
 
     this.users.set(id, updatedUser);
-    // return updatedUser;
-    return plainToClass(UserResponce, updatedUser);
+    return plainToClass(UserResponse, updatedUser);
   }
 
   remove(id: string): boolean {

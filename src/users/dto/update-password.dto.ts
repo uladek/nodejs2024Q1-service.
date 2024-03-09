@@ -1,10 +1,3 @@
-// import { IUpdatePasswordDto } from '../interfaces/usersInterfaces';
-//
-// export class UpdatePasswordDto {
-//   oldPassword: string;
-//   newPassword: string;
-// }
-
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
