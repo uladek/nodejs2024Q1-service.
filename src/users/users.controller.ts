@@ -14,7 +14,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/usersInterfaces';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-responce';
 
 import { validate } from 'uuid';
@@ -84,8 +84,15 @@ export class UsersController {
     if (!validate(id)) {
       throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
     }
+    if (
+      !updatePasswordDto ||
+      !updatePasswordDto.oldPassword ||
+      !updatePasswordDto.newPassword
+    ) {
+      throw new HttpException('Invalid user Dto', HttpStatus.BAD_REQUEST);
+    }
 
-    const user = await this.usersService.findOne(id);
+    const user = this.usersService.findOne(id);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
