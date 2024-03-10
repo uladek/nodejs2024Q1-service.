@@ -7,6 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "users test": "npm run test test/users.e2e.spec.ts ",
+    "users tracks": "npm run test test/tracks.e2e.spec.ts ",
+    "users artists": "npm run test test/artists.e2e.spec.ts ",
+
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

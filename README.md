@@ -35,6 +35,10 @@ To run all tests without authorization
 
 ```
 npm run test
+
+  users tests: npm run test test/users.e2e.spec.ts
+
+  artists tests: npm run test test/artists.e2e.spec.ts
 ```
 
 To run only one of all test suites
