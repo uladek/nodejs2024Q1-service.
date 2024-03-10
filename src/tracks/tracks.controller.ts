@@ -24,17 +24,17 @@ export class TracksController {
     return this.tracksService.create(createTrackDto);
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  findAll(): Track[] {
-    return this.tracksService.findAll();
-  }
+  // @Get()
+  // @HttpCode(HttpStatus.OK)
+  // findAll(): Track[] {
+  //   return this.tracksService.findAll();
+  // }
 
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string): Track {
-    return this.tracksService.findOne(id);
-  }
+  // @Get(':id')
+  // @HttpCode(HttpStatus.OK)
+  // findOne(@Param('id') id: string): Track {
+  //   return this.tracksService.findOne(id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
