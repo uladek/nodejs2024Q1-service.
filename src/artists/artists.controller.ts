@@ -2,12 +2,15 @@ import {
   Controller,
   Get,
   Post,
-  Patch,
   Delete,
   Param,
   Body,
   HttpStatus,
   HttpCode,
+  Put,
+  ParseUUIDPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -19,6 +22,7 @@ export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createArtistDto: CreateArtistDto): Artist {
     return this.artistsService.create(createArtistDto);
@@ -30,21 +34,22 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Artist {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Artist {
     return this.artistsService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
+  @UsePipes(new ValidationPipe())
   update(
-    @Param('id') id: string,
-    @Body() updateArtistDto: UpdateArtistDto,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateArtistDto,
   ): Artist {
-    return this.artistsService.update(id, updateArtistDto);
+    return this.artistsService.update(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): void {
+  remove(@Param('id', ParseUUIDPipe) id: string): void {
     this.artistsService.remove(id);
   }
 }
