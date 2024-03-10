@@ -1,42 +1,53 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { validate } from 'uuid';
 import { randomUUID } from 'crypto';
-
-export interface Track {
-  id: string; // uuid v4
-  name: string;
-  artistId: string | null; // refers to Artist
-  albumId: string | null; // refers to Album
-  duration: number; // integer number
-}
+import { Track } from './entities/track.entity';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class TracksService {
   private tracks: Map<string, Track> = new Map<string, Track>();
 
-  create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+  create(createTrackDto: CreateTrackDto): Track {
+    const id = randomUUID();
+    const track: Track = {
+      id,
+      ...createTrackDto,
+    };
+    this.tracks.set(id, track);
+    return plainToClass(Track, track);
   }
 
-  findAll() {
-    return `This action returns all tracks`;
+  findAll(): Track[] {
+    return [...this.tracks.values()];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  findOne(id: string): Track {
+    const track = this.tracks.get(id);
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+    return this.tracks.get(id);
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  update(id: string, updateTrackDto: UpdateTrackDto): Track {
+    const track = this.tracks.get(id);
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+    const updatedTrack: Track = {
+      ...track,
+      ...updateTrackDto,
+    };
+    this.tracks.set(id, updatedTrack);
+    return plainToClass(Track, updatedTrack);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  remove(id: string): void {
+    if (!this.tracks.has(id)) {
+      throw new NotFoundException('Track not found');
+    }
+    this.tracks.delete(id);
   }
 }

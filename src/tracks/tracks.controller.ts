@@ -3,46 +3,53 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
   HttpStatus,
-  BadRequestException,
+  Put,
+  ParseUUIDPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { Track, TracksService } from './tracks.service';
+import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { Track } from './entities/track.entity';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
-@Controller('tracks')
+@Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTrackDto: CreateTrackDto) {
+  create(@Body() createTrackDto: CreateTrackDto): Track {
     return this.tracksService.create(createTrackDto);
   }
 
-  // @Get()
-  // @HttpCode(HttpStatus.OK)
-  // findAll(): Track[] {
-  //   return this.tracksService.findAll();
-  // }
+  @Get()
+  findAll(): Track[] {
+    return this.tracksService.findAll();
+  }
 
-  // @Get(':id')
-  // @HttpCode(HttpStatus.OK)
-  // findOne(@Param('id') id: string): Track {
-  //   return this.tracksService.findOne(id);
-  // }
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string): Track {
+    return this.tracksService.findOne(id);
+  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
-    return this.tracksService.update(+id, updateTrackDto);
+  @Put(':id')
+  @UsePipes(new ValidationPipe())
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
+  ): Track {
+    return this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tracksService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.tracksService.remove(id);
   }
 }
