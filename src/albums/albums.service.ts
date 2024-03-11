@@ -76,7 +76,6 @@ export class AlbumsService {
     if (!this.databaseService.albums.has(id)) {
       throw new NotFoundException('Album not found');
     }
-    // const deleteAlbom = this.databaseService.albums.delete(id);
-    this.databaseService.albums.delete(id);
+    this.databaseService.deleteAlbum(id);
   }
 }

@@ -40,4 +40,18 @@ export class DatabaseService {
 
     this.artists.delete(id);
   }
+
+  deleteAlbum(id: string): void {
+
+    const tracksToRemove = Array.from(this.tracks.values()).filter(
+      (track) => track.albumId === id,
+    );
+
+    tracksToRemove.forEach((track) => {
+      track.albumId = null;
+      this.tracks.set(track.id, track);
+    });
+
+    this.albums.delete(id);
+  }
 }
