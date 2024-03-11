@@ -50,18 +50,6 @@ export class ArtistsService {
       throw new NotFoundException('Artist not found');
     }
 
-    this.databaseService.artists.delete(id);
-
-    for (const track of this.databaseService.tracks.values()) {
-      if (track.artistId === id) {
-        track.artistId = null;
-      }
-    }
-
-    for (const album of this.databaseService.albums.values()) {
-      if (album.artistId === id) {
-        album.artistId = null;
-      }
-    }
+    this.databaseService.deleteArtist(id);
   }
 }
