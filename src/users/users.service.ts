@@ -48,7 +48,7 @@ export class UsersService {
   }
 
   updatePassword(id: string, updatePasswordDto: UpdatePasswordDto): User {
-    const { oldPassword, newPassword } = updatePasswordDto;
+    const { oldPassword } = updatePasswordDto;
     const user = this.databaseService.users.get(id);
     if (!user) {
       throw new NotFoundException('User not found');

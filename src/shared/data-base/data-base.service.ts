@@ -10,15 +10,18 @@ export class DatabaseService {
   public tracks: Map<string, Track> = new Map<string, Track>();
   public artists: Map<string, Artist> = new Map<string, Artist>();
   public albums: Map<string, Album> = new Map<string, Album>();
+  public favorites: {
+    artists: string[];
+    albums: string[];
+    tracks: string[];
+  } = {
+    artists: [],
+    albums: [],
+    tracks: [],
+  };
 
   deleteArtist(id: string): void {
     //   // Выводим информацию об артисте
-    console.log('ID', id);
-
-    console.log('this.artists', this.artists);
-    console.log('tracks', this.tracks);
-    console.log('album', this.albums);
-
     const tracksToRemove = Array.from(this.tracks.values()).filter(
       (track) => track.artistId === id,
     );
@@ -42,7 +45,6 @@ export class DatabaseService {
   }
 
   deleteAlbum(id: string): void {
-
     const tracksToRemove = Array.from(this.tracks.values()).filter(
       (track) => track.albumId === id,
     );

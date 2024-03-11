@@ -10,6 +10,7 @@
     "tracks tests": "npm run test test/tracks.e2e.spec.ts ",
     "artists tests": "npm run test test/artists.e2e.spec.ts ",
     "albums tests": "npm run test test/albums.e2e.spec.ts ",
+    "fav tests": "npm run test test/favorites.e2e.spec.ts ",
 
     "prebuild": "rimraf dist",
     "build": "nest build",

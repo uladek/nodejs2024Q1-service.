@@ -37,8 +37,11 @@ To run all tests without authorization
 npm run test
 
   users tests: npm run test test/users.e2e.spec.ts
-
   artists tests: npm run test test/artists.e2e.spec.ts
+  tracks tests: npm run test test/tracks.e2e.spec.ts
+  albums tests: npm run test test/albums.e2e.spec.ts
+  favorites tests: npm run test test/favorites.e2e.spec.ts
+
 ```
 
 To run only one of all test suites
