@@ -1,30 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { Artist } from './entities/artist.entity';
-import { v4 as uuidv4 } from 'uuid';
-import { plainToClass } from 'class-transformer';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { randomUUID } from 'crypto';
+import { Artist } from './entities/artist.entity';
+import { plainToClass } from 'class-transformer';
+import { DatabaseService } from 'src/shared/data-base/data-base.service';
 
 @Injectable()
 export class ArtistsService {
-  private artists: Map<string, Artist> = new Map<string, Artist>();
+  constructor(private readonly databaseService: DatabaseService) {}
 
   create(createArtistDto: CreateArtistDto): Artist {
+    const id = randomUUID();
     const artist: Artist = {
-      id: randomUUID(),
+      id,
       ...createArtistDto,
     };
-    this.artists.set(artist.id, artist);
+    this.databaseService.artists.set(id, artist);
     return plainToClass(Artist, artist);
   }
 
   findAll(): Artist[] {
-    return [...this.artists.values()];
+    return [...this.databaseService.artists.values()];
   }
 
   findOne(id: string): Artist {
-    const artist = this.artists.get(id);
+    const artist = this.databaseService.artists.get(id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
     }
@@ -32,23 +33,35 @@ export class ArtistsService {
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto): Artist {
-    const artist = this.artists.get(id);
+    const artist = this.databaseService.artists.get(id);
     if (!artist) {
-      throw new NotFoundException('Artist not found', 'NOT_FOUND');
+      throw new NotFoundException('Artist not found');
     }
-
     const updatedArtist: Artist = {
       ...artist,
       ...updateArtistDto,
     };
-    this.artists.set(id, updatedArtist);
+    this.databaseService.artists.set(id, updatedArtist);
     return plainToClass(Artist, updatedArtist);
   }
 
   remove(id: string): void {
-    if (!this.artists.has(id)) {
+    if (!this.databaseService.artists.has(id)) {
       throw new NotFoundException('Artist not found');
     }
-    this.artists.delete(id);
+
+    this.databaseService.artists.delete(id);
+
+    for (const track of this.databaseService.tracks.values()) {
+      if (track.artistId === id) {
+        track.artistId = null;
+      }
+    }
+
+    for (const album of this.databaseService.albums.values()) {
+      if (album.artistId === id) {
+        album.artistId = null;
+      }
+    }
   }
 }

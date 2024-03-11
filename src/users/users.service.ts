@@ -1,42 +1,62 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './interfaces/usersInterfaces';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { UpdatePasswordDto } from './dto/update-user.dto';
+import { DatabaseService } from 'src/shared/data-base/data-base.service';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
-import { UserResponse } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users: Map<string, User> = new Map<string, User>();
+  constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createUserDto: CreateUserDto): UserResponse {
+  create(createUserDto: CreateUserDto): User {
+    const { login, password } = createUserDto;
+    if (!login || !password) {
+      throw new HttpException('Login and password are required', 400);
+    }
+    const id = randomUUID();
+
     const { ...userData } = createUserDto;
     const newUser: User = {
-      id: randomUUID(),
+      id: id,
       ...userData,
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    this.users.set(newUser.id, newUser);
-    return plainToClass(UserResponse, newUser);
+
+    this.databaseService.users.set(id, newUser);
+    return plainToClass(User, newUser);
   }
 
   findAll(): User[] {
-    return Array.from(this.users.values());
+    return [...this.databaseService.users.values()];
   }
 
   findOne(id: string): User {
-    const user = this.users.get(id);
+    const user = this.databaseService.users.get(id);
     if (!user) {
-      return null;
+      throw new NotFoundException('User not found');
     }
     return user;
   }
 
   updatePassword(id: string, updatePasswordDto: UpdatePasswordDto): User {
-    const user = this.users.get(id);
+    const { oldPassword, newPassword } = updatePasswordDto;
+    const user = this.databaseService.users.get(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.password !== oldPassword) {
+      throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
+    }
 
     const updatedUser: User = {
       ...user,
@@ -45,15 +65,14 @@ export class UsersService {
       updatedAt: Date.now(),
     };
 
-    this.users.set(id, updatedUser);
-    return plainToClass(UserResponse, updatedUser);
+    this.databaseService.users.set(id, updatedUser);
+    return plainToClass(User, updatedUser);
   }
 
-  remove(id: string): boolean {
-    if (!this.users.has(id)) {
-      return false;
+  remove(id: string): void {
+    if (!this.databaseService.users.has(id)) {
+      throw new NotFoundException('User not found');
     }
-    this.users.delete(id);
-    return true;
+    this.databaseService.users.delete(id);
   }
 }

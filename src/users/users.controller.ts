@@ -5,128 +5,52 @@ import {
   Body,
   Param,
   Delete,
-  HttpException,
-  HttpStatus,
   HttpCode,
+  HttpStatus,
   Put,
+  ParseUUIDPipe,
+  UsePipes,
+  ValidationPipe,
+  HttpException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces/usersInterfaces';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserResponseDto } from './dto/user-responce';
 
-import { validate } from 'uuid';
-
-@ApiTags('user')
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Created', type: UserResponseDto })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    try {
-      if (!createUserDto.login || !createUserDto.password) {
-        throw new HttpException(
-          'Login and password are required',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      const newUser = this.usersService.create(createUserDto);
-      return newUser;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+  @UsePipes(new ValidationPipe())
+  @HttpCode(HttpStatus.CREATED)
+  createUser(@Body() createUserDto: CreateUserDto): User {
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'OK' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  async findAll(): Promise<User[]> {
-    try {
-      const users = this.usersService.findAll();
-      return users;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  findAll(): User[] {
+    return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiParam({ name: 'id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'OK' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  async findOne(@Param('id') id: string): Promise<User> {
-    if (!validate(id)) {
-      throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-    }
-
-    const result = this.usersService.findOne(id);
-    if (!result) {
-      throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
-    }
-    return result;
+  findOne(@Param('id', ParseUUIDPipe) id: string): User {
+    return this.usersService.findOne(id);
   }
 
   @Put(':id')
-  @ApiParam({ name: 'id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'OK' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  async updatePassword(
-    @Param('id') id: string,
+  @UsePipes(new ValidationPipe())
+  updatePassword(
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): Promise<User> {
-    if (!validate(id)) {
-      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
-    }
-    if (
-      !updatePasswordDto ||
-      !updatePasswordDto.oldPassword ||
-      !updatePasswordDto.newPassword
-    ) {
-      throw new HttpException('Invalid user Dto', HttpStatus.BAD_REQUEST);
-    }
-
-    const user = this.usersService.findOne(id);
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    if (user.password !== updatePasswordDto.oldPassword) {
-      throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
-    }
-
-    const updatedUser = this.usersService.updatePassword(id, updatePasswordDto);
-    return updatedUser;
+  ): User {
+    return this.usersService.updatePassword(id, updatePasswordDto);
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  @ApiParam({
-    name: 'id',
-    description: 'User ID',
-    // schema: {
-    //   type: 'string',
-    //   format: 'uuid',
-    // },
-  })
-  @ApiResponse({ status: 204, description: 'No Content' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  remove(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
-    }
-
-    const result = this.usersService.remove(id);
-    if (!result) {
-      throw new HttpException('User Not found', HttpStatus.NOT_FOUND);
-    }
-    // return null;
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.remove(id);
   }
 }
