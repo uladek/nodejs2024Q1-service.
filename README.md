@@ -39,18 +39,24 @@ part2
 # RUN npm install -g @nestjs/cli
 docker-compose build
 docker-compose up
-<!-- prod: -->
+
+PORT=4000(4001)
+PROD_PORT=5432  in .env (.emv.example)
+
+<!--  plus prod : -->
 docker build -t nestjs-docker .
 docker run nestjs-docker
 docker build -t nestjs-docker .
 docker run -p 4000:4000 nestjs-docker
 docker run -p 3000:4000 nestjs-docker
 
-
 docker build -t nestjs-prod -f Dockerfile.prod .
 docker run -p 4000:4000 nestjs-prod
 
 docker-compose up --build
+docker-compose -f docker-compose.prod.yml up --build
+docker-compose -f docker-compose.yml up --build
+
 
 To run only one of all test suites
 
