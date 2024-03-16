@@ -26,7 +26,7 @@
 
 FROM node:20
 
-WORKDIR /usr/srs/app
+WORKDIR /usr/src/app
 
 COPY . .
 

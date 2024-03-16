@@ -40,6 +40,19 @@ part2
 docker-compose build
 docker-compose up
 
+prod:
+docker build -t nestjs-docker .
+docker run nestjs-docker
+docker build -t nestjs-docker .
+ docker run -p 4000:4000 nestjs-docker
+  docker run -p 4001:4000 nestjs-docker
+
+
+docker build -t nestjs-prod -f Dockerfile.prod .
+docker run -p 4000:4000 nestjs-prod
+
+docker-compose up --build
+
 To run only one of all test suites
 
 ```
