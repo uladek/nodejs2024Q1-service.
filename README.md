@@ -1,14 +1,5 @@
 # Home Library Service
 
-## Prerequisites
-
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
-## Downloading
-
-```
-git clone {repository URL}
 ```
 
 ## Installing NPM modules
@@ -35,7 +26,7 @@ To run all tests without authorization
 
 ```
 npm run test
-
+part 1
   users tests: npm run test test/users.e2e.spec.ts
   artists tests: npm run test test/artists.e2e.spec.ts
   tracks tests: npm run test test/tracks.e2e.spec.ts
@@ -43,6 +34,11 @@ npm run test
   favorites tests: npm run test test/favorites.e2e.spec.ts
 
 ```
+part2
+# RUN npm install rimraf -g
+# RUN npm install -g @nestjs/cli
+docker-compose build
+docker-compose up
 
 To run only one of all test suites
 
