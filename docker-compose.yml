@@ -1,0 +1,14 @@
+version: '3.5'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '4000:4000'
+      # - ${PORT}:${PORT}
+    environment:
+      - PORT=4000
+      - NODE-ENV=development
+    volumes:
+      - ./src:/usr/src/app/src

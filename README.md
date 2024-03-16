@@ -39,13 +39,12 @@ part2
 # RUN npm install -g @nestjs/cli
 docker-compose build
 docker-compose up
-
-prod:
+<!-- prod: -->
 docker build -t nestjs-docker .
 docker run nestjs-docker
 docker build -t nestjs-docker .
- docker run -p 4000:4000 nestjs-docker
-  docker run -p 4001:4000 nestjs-docker
+docker run -p 4000:4000 nestjs-docker
+docker run -p 3000:4000 nestjs-docker
 
 
 docker build -t nestjs-prod -f Dockerfile.prod .
