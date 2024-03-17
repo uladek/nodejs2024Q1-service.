@@ -42,6 +42,7 @@ docker-compose up
 
 PORT=4000(4001)
 PROD_PORT=5432  in .env (.emv.example)
+POSGRES_PORT=5435
 
 <!--  plus prod : -->
 docker build -t nestjs-docker .
