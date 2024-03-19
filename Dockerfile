@@ -13,8 +13,6 @@
 # CMD ["npm", "run", "start:dev"]
 
 
-# Dockerfile
-
 # Development
 FROM node:20.11-alpine AS development
 

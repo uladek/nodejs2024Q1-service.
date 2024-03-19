@@ -14,14 +14,6 @@ export class UserEntity {
 
 export type UserEntityTyoe = Omit<User, 'password'>;
 
-// export class UserResponce implements UserEntityTyoe {
-//   id: string;
-//   login: string;
-//   version: number;
-//   createdAt: number;
-//   updatedAt: number;
-// }
-
 export class UserResponse {
   id: string;
   login: string;

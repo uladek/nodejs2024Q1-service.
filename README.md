@@ -44,21 +44,20 @@ PORT=4000(4001)
 POSGRES_PORT=5432
 
 <!--  plus prod : -->
-docker build -t nestjs-docker .
+<!-- docker build -t nestjs-docker .
 docker run nestjs-docker
 docker build -t nestjs-docker .
 docker run -p 4000:4000 nestjs-docker
 docker run -p 3000:4000 nestjs-docker
-
 docker build -t nestjs-prod -f Dockerfile.prod .
-docker run -p 4000:4000 nestjs-prod
+docker run -p 4000:4000 nestjs-prod -->
 
 
 docker-compose up --build
- npx prisma migrate dev --name init
+npx prisma migrate dev --name init
 
-docker-compose -f docker-compose.prod.yml up --build
-docker-compose -f docker-compose.yml up --build
+<!-- docker-compose -f docker-compose.prod.yml up --build
+docker-compose -f docker-compose.yml up --build -->
 
 
 To run only one of all test suites

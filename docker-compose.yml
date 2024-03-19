@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   api:
-    # container_name: ""
     # image: docker pull postgres:16.2-alpine
     build:
       context: .
@@ -28,13 +27,13 @@ services:
     build:
       context: ./src/shared/data-base
       dockerfile: Dockerfile
-    # container_name: postgres"
-    # image: 'uladek-postgress'
     # image: postgres:16.2-alpine
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - DATABASE_URL=${DATABASE_URL}
+      # ?
+      #  DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
 
       # - ROOT_PASSWORD=${ROOT_PASSWORD}
       # - POSTGRES_DB=${POSTGRES_DB}
