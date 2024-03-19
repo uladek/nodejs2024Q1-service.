@@ -10,6 +10,9 @@ import { DataBaseModule } from './shared/data-base/data-base.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { APP_FILTER } from '@nestjs/core';
+import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -25,6 +28,14 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    UsersService,
+    {
+      provide: APP_FILTER,
+      useClass: PrismaExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}

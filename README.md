@@ -56,6 +56,16 @@ docker run -p 4000:4000 nestjs-prod -->
 docker-compose up --build
 npx prisma migrate dev --name init
 
+### delete containers
+ - docker-compose down
+ 
+### recreate containers
+- npx prisma generate
+ - docker-compose up -d
+    check
+  - docker-compose logs api
+  - docker-compose logs postgres
+
 <!-- docker-compose -f docker-compose.prod.yml up --build
 docker-compose -f docker-compose.yml up --build -->
 

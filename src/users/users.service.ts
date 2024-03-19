@@ -50,9 +50,12 @@ export class UsersService {
     }));
   }
 
-  async findOne(id: string): Promise<User | null> {
+  async findOne(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) return null;
+    // if (!user) return null;
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     return {
       ...user,
@@ -99,4 +102,6 @@ export class UsersService {
 
     await this.prisma.user.delete({ where: { id } });
   }
+
+
 }
