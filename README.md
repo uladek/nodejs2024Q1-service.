@@ -26,7 +26,8 @@ To run all tests without authorization
 
 ```
 npm run test
-part 1
+or
+
   users tests: npm run test test/users.e2e.spec.ts
   artists tests: npm run test test/artists.e2e.spec.ts
   tracks tests: npm run test test/tracks.e2e.spec.ts
@@ -53,26 +54,31 @@ docker build -t nestjs-prod -f Dockerfile.prod .
 docker run -p 4000:4000 nestjs-prod --> -->
 
 
+prebuild
 docker-compose up --build
 npx prisma migrate dev --name init
 
-### delete containers
+**pdate docker-compose**
+   docker-compose up
+
+**delete containers**
  - docker-compose down
 - cleam port
-sudo kill 51627
+sudo kill <pid>
  npx prisma migrate dev --name init
  npx prisma migrate deploy
 
-### recreate containers
-npx prisma generate
-prebuild
-docker images
- docker-compose up -d
- <!-- npm uninstall @prisma/client -->
+**recreate containers**
+   prebuild
+   npx prisma generate
+   docker images
+   docker-compose up -d
 
+ <!-- npm uninstall @prisma/client -->
  npm install @prisma/client(prisma generate)
   npx prisma migrate dev --name init
-  ##  check
+
+ **check**
   - docker-compose logs api
   - docker-compose logs postgres
 

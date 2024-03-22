@@ -28,7 +28,6 @@ export class UsersService {
     console.log('Creating user with login:', login);
 
     // const id = randomUUID();
-    // console.log('Created user ID no test:', id);
     const { ...userData } = createUserDto;
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -41,9 +40,14 @@ export class UsersService {
         updatedAt: updatedAt,
       },
     });
-    // console.log('Created user ID:', id);
 
-    return plainToClass(User, newUser);
+    // return plainToClass(User, newUser);
+
+    return plainToClass(User, {
+      ...newUser,
+      createdAt: newUser.createdAt.getTime(),
+      updatedAt: newUser.updatedAt.getTime(),
+    });
   }
 
   async findAll(): Promise<User[]> {
@@ -57,7 +61,6 @@ export class UsersService {
 
   async findOne(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
-    // if (!user) return null;
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -90,13 +93,20 @@ export class UsersService {
         version: user.version + 1,
         updatedAt: new Date(),
       },
+      // select: {
+      //   id: true,
+      //   version: true,
+      //   login: true,
+      //   createdAt: true,
+      //   updatedAt: true,
+      // },
     });
 
-    return {
+    return plainToClass(User, {
       ...updatedUser,
       createdAt: updatedUser.createdAt.getTime(),
       updatedAt: updatedUser.updatedAt.getTime(),
-    };
+    });
   }
 
   async remove(id: string): Promise<void> {
