@@ -14,10 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { login, password } = createUserDto;
@@ -40,8 +37,6 @@ export class UsersService {
         updatedAt: updatedAt,
       },
     });
-
-    // return plainToClass(User, newUser);
 
     return plainToClass(User, {
       ...newUser,
@@ -93,13 +88,6 @@ export class UsersService {
         version: user.version + 1,
         updatedAt: new Date(),
       },
-      // select: {
-      //   id: true,
-      //   version: true,
-      //   login: true,
-      //   createdAt: true,
-      //   updatedAt: true,
-      // },
     });
 
     return plainToClass(User, {

@@ -24,32 +24,32 @@ export class ArtistsController {
   @Post()
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createArtistDto: CreateArtistDto): Artist {
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
     return this.artistsService.create(createArtistDto);
   }
 
   @Get()
-  findAll(): Artist[] {
+  async findAll(): Promise<Artist[]> {
     return this.artistsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Artist {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
     return this.artistsService.findOne(id);
   }
 
   @Put(':id')
   @UsePipes(new ValidationPipe())
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdateArtistDto,
-  ): Artist {
-    return this.artistsService.update(id, dto);
+    @Body() updateArtistDto: UpdateArtistDto,
+  ): Promise<Artist> {
+    return this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string): void {
-    this.artistsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.artistsService.remove(id);
   }
 }

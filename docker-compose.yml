@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   api:
-    # image: docker pull postgres:16.2-alpine
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,7 +10,6 @@ services:
     ports:
       - ${PORT}:${PORT}
     environment:
-      # - DATABASE_URL=${DATABASE_URL}
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
       - PORT=${PORT}
       - NODE_ENV=development
@@ -27,7 +25,6 @@ services:
     build:
       context: ./src/shared/data-base
       dockerfile: Dockerfile
-    # image: postgres:16.2-alpine
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -48,55 +45,3 @@ volumes:
 
 networks:
   nestjs:
-# version: '3.8'
-# services:
-#   api:
-#     # image: docker pull postgres:16.2-alpine
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#       target: development
-#     depends_on:
-#       - postgres
-#     ports:
-#       - ${PORT}:${PORT}
-#     environment:
-#       # - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
-#       - DATABASE_URL=${DATABASE_URL}
-#       - PORT=${PORT}
-#       - NODE_ENV=development
-#     volumes:
-#       - .:/usr/src/app
-#     env_file:
-#       - .env
-#     command: npm run start:dev
-#     # command: sh -c "wait-for-it postgres:${POSTGRES_PORT} -- npm run start:dev"
-#     networks:
-#       - nestjs
-
-#   postgres:
-#     build:
-#       context: ./src/shared/data-base
-#       dockerfile: Dockerfile
-#     # image: postgres:16.2-alpine
-#     ports:
-#       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-#     environment:
-#       - POSTGRES_USER=${POSTGRES_USER}
-#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#       - POSTGRES_DB=${POSTGRES_DB}
-
-#     restart: always
-#     env_file:
-#       - .env
-#     volumes:
-#       - postgres:/var/lib/postgresql/data
-#     networks:
-#       - nestjs
-
-# volumes:
-#   postgres:
-#     name: nestjs
-
-# networks:
-#   nestjs:
