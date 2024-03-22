@@ -14,7 +14,7 @@ npm install
 npm start
 ```
 
-After starting the app on port (4000 as default) you can open
+After starting the app on port (4000 as default) you can openocker
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
@@ -34,7 +34,7 @@ part 1
   favorites tests: npm run test test/favorites.e2e.spec.ts
 
 ```
-part2
+<!-- part2
 # RUN npm install rimraf -g
 # RUN npm install -g @nestjs/cli
 docker-compose build
@@ -50,7 +50,7 @@ docker build -t nestjs-docker .
 docker run -p 4000:4000 nestjs-docker
 docker run -p 3000:4000 nestjs-docker
 docker build -t nestjs-prod -f Dockerfile.prod .
-docker run -p 4000:4000 nestjs-prod -->
+docker run -p 4000:4000 nestjs-prod --> -->
 
 
 docker-compose up --build
@@ -58,11 +58,21 @@ npx prisma migrate dev --name init
 
 ### delete containers
  - docker-compose down
- 
+- cleam port
+sudo kill 51627
+ npx prisma migrate dev --name init
+ npx prisma migrate deploy
+
 ### recreate containers
-- npx prisma generate
- - docker-compose up -d
-    check
+npx prisma generate
+prebuild
+docker images
+ docker-compose up -d
+ <!-- npm uninstall @prisma/client -->
+
+ npm install @prisma/client(prisma generate)
+  npx prisma migrate dev --name init
+  ##  check
   - docker-compose logs api
   - docker-compose logs postgres
 

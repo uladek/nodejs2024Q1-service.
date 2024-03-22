@@ -24,19 +24,24 @@ export class UsersService {
     if (!login || !password) {
       throw new HttpException('Login and password are required', 400);
     }
-    const id = randomUUID();
+
+    console.log('Creating user with login:', login);
+
+    // const id = randomUUID();
+    // console.log('Created user ID no test:', id);
     const { ...userData } = createUserDto;
     const createdAt = new Date();
     const updatedAt = new Date();
     const newUser = await this.prisma.user.create({
       data: {
-        id: id,
+        // id: id,
         ...userData,
         version: 1,
         createdAt: createdAt,
         updatedAt: updatedAt,
       },
     });
+    // console.log('Created user ID:', id);
 
     return plainToClass(User, newUser);
   }
@@ -102,6 +107,4 @@ export class UsersService {
 
     await this.prisma.user.delete({ where: { id } });
   }
-
-
 }

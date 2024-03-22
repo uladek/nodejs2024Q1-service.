@@ -1,16 +1,16 @@
 
 
-# FROM node:20.11-alpine
+FROM node:20.11-alpine
 
-# WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
-# COPY package*.json ./
+COPY package*.json ./
 
-# RUN npm install
+RUN npm install
 
-# COPY . .
+COPY . .
 
-# CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:dev"]
 
 
 # Development
@@ -38,3 +38,5 @@ COPY . .
 EXPOSE 4000
 
 CMD ["npm", "run", "start:dev"]
+# CMD npx prisma migrate dev && npm run start:dev
+# CMD npx prisma migrate dev
