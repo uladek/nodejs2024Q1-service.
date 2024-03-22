@@ -36,8 +36,8 @@ model Album {
   id        String     @id @default(uuid())
   name      String
   year      Int
-  artistId  String
-  artist    Artist     @relation(fields: [artistId], references: [id])
+  artistId  String?
+  artist    Artist?    @relation(fields: [artistId], references: [id])
   tracks    Track[]
   favorites Favorite[]
 }
