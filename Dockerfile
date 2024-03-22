@@ -1,16 +1,14 @@
+# FROM node:20.11-alpine
 
+# WORKDIR /usr/src/app
 
-FROM node:20.11-alpine
+# COPY package*.json ./
 
-WORKDIR /usr/src/app
+# RUN npm install
 
-COPY package*.json ./
+# COPY . .
 
-RUN npm install
-
-COPY . .
-
-CMD ["npm", "run", "start:dev"]
+# CMD ["npm", "run", "start:dev"]
 
 
 # Development
@@ -32,6 +30,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install --only=production
+# RUN npm install && nest build
 
 COPY . .
 
