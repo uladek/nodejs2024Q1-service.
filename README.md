@@ -35,38 +35,9 @@ or
   favorites tests: npm run test test/favorites.e2e.spec.ts
 
 ```
-<!-- part2
-# RUN npm install rimraf -g
-# RUN npm install -g @nestjs/cli
-docker-compose build
-docker-compose up
-
-PORT=4000(4001)
-POSGRES_PORT=5432
-
-<!--  plus prod : -->
-<!-- docker build -t nestjs-docker .
-docker run nestjs-docker
-docker build -t nestjs-docker .
-docker run -p 4000:4000 nestjs-docker
-docker run -p 3000:4000 nestjs-docker
-docker build -t nestjs-prod -f Dockerfile.prod .
-docker run -p 4000:4000 nestjs-prod --> -->
 
 
-prebuild
-docker-compose up --build
-npx prisma migrate dev --name init
-
-**pdate docker-compose**
-   docker-compose up
-
-**delete containers**
- - docker-compose down
-- cleam port
-sudo kill <pid>
- npx prisma migrate dev --name init
- npx prisma migrate deploy
+ <!-- part2
 
 **recreate containers**
    prebuild
@@ -74,7 +45,7 @@ sudo kill <pid>
    docker images
    docker-compose up -d
 
- <!-- npm uninstall @prisma/client -->
+  npm uninstall @prisma/client
  npm install @prisma/client(prisma generate)
   npx prisma migrate dev --name init
 
@@ -82,13 +53,36 @@ sudo kill <pid>
   - docker-compose logs api
   - docker-compose logs postgres
 
-<!-- docker-compose -f docker-compose.prod.yml up --build
-docker-compose -f docker-compose.yml up --build -->
+ docker-compose -f docker-compose.prod.yml up --build
+docker-compose -f docker-compose.yml up --build  -->
 
+
+
+...
+...
+
+
+**delete containers**
+ - docker-compose down
+
+**ontainerization, Docker**
+
+checout to *docker_db*
+  Create a .env file and copy the data from .env.example
+  _run_  npm install
+  _run_  prebuild
+  _run_  docker-compose up --build
+  _run_  npx prisma migrate dev --name init
+  _run_  docker:scan api
+  _run_  docker:scan postgres
+
+
+
+'''
+```
 
 To run only one of all test suites
 
-```
 npm run test -- <path to suite>
 ```
 

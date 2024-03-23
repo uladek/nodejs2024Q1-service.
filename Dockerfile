@@ -36,6 +36,6 @@ COPY . .
 
 EXPOSE 4000
 
-CMD ["npm", "run", "start:dev"]
-# CMD npx prisma migrate dev && npm run start:dev
-# CMD npx prisma migrate dev
+# CMD ["npm", "run", "start:dev"]
+
+CMD ["npm", "run", "docker:start"]

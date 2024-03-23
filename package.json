@@ -27,6 +27,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "update dc": "docker-compose up",
     "!! rebuild  dc": "docker-compose up --build",
+    "docker:start": "npx prisma migrate dev && npm run start:dev",
     "docker:scan api": "docker scout cves --details nodejs2024q1-service-api:latest",
     "docker:scan postgres": "docker scout cves --details nodejs2024q1-service-postgres:latest",
     "prisma generate": "prisma generate",
