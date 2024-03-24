@@ -1,15 +1,3 @@
-# FROM node:20.11-alpine
-
-# WORKDIR /usr/src/app
-
-# COPY package*.json ./
-
-# RUN npm install
-
-# COPY . .
-
-# CMD ["npm", "run", "start:dev"]
-
 
 # Development
 FROM node:20.11-alpine AS development
@@ -17,6 +5,8 @@ FROM node:20.11-alpine AS development
 WORKDIR /usr/src/app
 
 COPY package*.json ./
+
+# RUN apk add --no-cache libxml2@2.12.5-r0
 
 RUN npm install
 
