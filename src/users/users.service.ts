@@ -24,13 +24,11 @@ export class UsersService {
 
     console.log('Creating user with login:', login);
 
-    // const id = randomUUID();
     const { ...userData } = createUserDto;
     const createdAt = new Date();
     const updatedAt = new Date();
     const newUser = await this.prisma.user.create({
       data: {
-        // id: id,
         ...userData,
         version: 1,
         createdAt: createdAt,
@@ -89,7 +87,7 @@ export class UsersService {
         updatedAt: new Date(),
       },
     });
-
+    // console.log(updatedUser);
     return plainToClass(User, {
       ...updatedUser,
       createdAt: updatedUser.createdAt.getTime(),

@@ -71,7 +71,10 @@ checout to *docker_db*
   Create a .env file and copy the data from .env.example
   _run_  npm install
   _run_  prebuild
-  _run_  docker-compose up --build
+  _run_  docker-compose up --build or rebuild dc
+
+    npm run test
+    
   _run_  npx prisma migrate dev --name init
   _run_  docker:scan api
   _run_  docker:scan postgres

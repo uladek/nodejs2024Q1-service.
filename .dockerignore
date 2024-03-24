@@ -3,4 +3,4 @@ test
 .gitignore
 .git
 Dockerfile
-READMY.md
+README.md
