@@ -24,25 +24,23 @@ To run all tests without authorization
 
 ```
 npm run test
-or
-
+```
+or:
   users tests: npm run test test/users.e2e.spec.ts
   artists tests: npm run test test/artists.e2e.spec.ts
   tracks tests: npm run test test/tracks.e2e.spec.ts
   albums tests: npm run test test/albums.e2e.spec.ts
   favorites tests: npm run test test/favorites.e2e.spec.ts
 
-```
+
 
 ##  Containerization, Docker
 
-switch to _docker_db_
+switch to __docker_db__
   Create a .env file and copy the data from .env.example
-  ```
+
+   ```
      npm install
-  ```
-  ```
-    prebuild
   ```
   ```
     docker-compose up --build
@@ -51,7 +49,7 @@ switch to _docker_db_
     npm run test
   ```
 
-*scan*
+**scan**
 ```
     docker:scan api
 ```
@@ -59,18 +57,20 @@ switch to _docker_db_
     docker:scan postgres
 ```
 
-*delete containers*
+**delete containers**
 ```
   docker-compose down
 ```
-*migrate*
+
+**migrate**
 ```
   npx prisma migrate dev --name init
-
 ```
 
-To run only one of all test suites
 
+
+### To run only one of all test suites
+```
 npm run test -- <path to suite>
 ```
 
