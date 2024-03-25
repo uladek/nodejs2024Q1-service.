@@ -1,7 +1,5 @@
 # Home Library Service
 
-```
-
 ## Installing NPM modules
 
 ```
@@ -36,33 +34,39 @@ or
 
 ```
 
+##  Containerization, Docker
 
-...
-...
-
-
-**delete containers**
- - docker-compose down
-
-**ontainerization, Docker**
-
-checout to *docker_db*
+switch to _docker_db_
   Create a .env file and copy the data from .env.example
-  `_run_`  npm install
-  `_run_ ` prebuild
-  `_run_`  docker-compose up --build (or rebuild dc)
+  ```
+     npm install
+  ```
+  ```
+    prebuild
+  ```
+  ```
+    docker-compose up --build
+  ```
+  ```
+    npm run test
+  ```
 
-  `_run_`  npm run test
+*scan*
+```
+    docker:scan api
+```
+```
+    docker:scan postgres
+```
 
-  `_run_`  docker:scan api
-  `_run_  docker:scan postgres
+*delete containers*
+```
+  docker-compose down
+```
+*migrate*
+```
+  npx prisma migrate dev --name init
 
-  <!-- `_run_`  npx prisma migrate dev --name init -->
-
-
-
-
-'''
 ```
 
 To run only one of all test suites
