@@ -1,7 +1,4 @@
-// import { IUser } from '../interfaces/usersInterfaces';
-
 import { Exclude } from 'class-transformer';
-// import { User } from '../interfaces/usersInterfaces';
 
 export class UserEntity {
   id: string;
@@ -25,8 +22,6 @@ export class UserResponse {
   password: string;
 }
 
-// user.entity.ts
-
 export class User {
   id: string;
   login: string;
@@ -34,16 +29,16 @@ export class User {
   @Exclude()
   password: string;
   version: number;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(
     id: string,
     login: string,
     password: string,
     version: number,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: Date,
+    updatedAt: Date,
   ) {
     this.id = id;
     this.login = login;

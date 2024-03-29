@@ -4,13 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
-import { DatabaseService } from 'src/shared/data-base/data-base.service';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { LoginDto } from 'src/auth/dto/create-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -43,14 +42,32 @@ export class UsersService {
     });
   }
 
+  // async findAll(): Promise<User[]> {
+  //   const users = await this.prisma.user.findMany();
+  //   return users.map((user) => ({
+  //     ...user,
+  //     createdAt: user.createdAt.getTime(),
+  //     updatedAt: user.updatedAt.getTime(),
+  //   }));
+  // }
+
   async findAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany();
-    return users.map((user) => ({
-      ...user,
-      createdAt: user.createdAt.getTime(),
-      updatedAt: user.updatedAt.getTime(),
-    }));
+    return users;
   }
+
+  // async findOne(id: string): Promise<User> {
+  //   const user = await this.prisma.user.findUnique({ where: { id } });
+  //   if (!user) {
+  //     throw new NotFoundException('User not found');
+  //   }
+
+  //   return {
+  //     ...user,
+  //     createdAt: user.createdAt.getTime(),
+  //     updatedAt: user.updatedAt.getTime(),
+  //   };
+  // }
 
   async findOne(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
@@ -58,11 +75,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return {
-      ...user,
-      createdAt: user.createdAt.getTime(),
-      updatedAt: user.updatedAt.getTime(),
-    };
+    return user;
   }
 
   async updatePassword(
@@ -87,7 +100,6 @@ export class UsersService {
         updatedAt: new Date(),
       },
     });
-    // console.log(updatedUser);
     return plainToClass(User, {
       ...updatedUser,
       createdAt: updatedUser.createdAt.getTime(),
@@ -103,4 +115,17 @@ export class UsersService {
 
     await this.prisma.user.delete({ where: { id } });
   }
+  async findByLogin(loginDto: LoginDto): Promise<User | null> {
+    // const { login, password } = loginDto;
+
+    const { login } = loginDto;
+    const user = await this.prisma.user.findFirst({
+      where: {
+        login,
+      },
+    });
+    return user;
+  }
+
+
 }
