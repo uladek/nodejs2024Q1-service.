@@ -129,11 +129,11 @@ export class UsersService {
     return user;
   }
 
-  async validatePassword(login: string, password: string): Promise<boolean> {
-    const user = await this.findByLogin(login);
-    if (!user) {
-      return false;
-    }
-    return bcrypt.compare(password, user.password);
-  }
+  // async validatePassword(login: string, password: string): Promise<boolean> {
+  //   const user = await this.findByLogin(login);
+  //   if (!user) {
+  //     return false;
+  //   }
+  //   return bcrypt.compare(password, user.password);
+  // }
 }

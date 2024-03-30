@@ -43,17 +43,24 @@ export class AuthService {
       );
     }
 
-    const isPasswordValid = await this.usersService.validatePassword(
-      login,
-      password,
-    );
+    // const isPasswordValid = await this.usersService.validatePassword(
+    //   login,
+    //   password,
+    // );
+    // if (!isPasswordValid) {
+    //   throw new HttpException(
+    //     'Invalid login credentials',
+    //     HttpStatus.UNAUTHORIZED,
+    //   );
+    // }
+
+    const isPasswordValid = await this.validateUser(login, password);
     if (!isPasswordValid) {
       throw new HttpException(
         'Invalid login credentials',
         HttpStatus.UNAUTHORIZED,
       );
     }
-
     const payload = { userId: user.id, login: user.login };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, { expiresIn: '1h' }),
@@ -80,5 +87,13 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+  }
+
+  async validateUser(login: string, password: string): Promise<User | null> {
+    const user = await this.usersService.findByLogin(login);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+    return null;
   }
 }
