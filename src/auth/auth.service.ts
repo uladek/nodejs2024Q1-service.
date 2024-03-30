@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
+import { RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -16,9 +16,10 @@ export class AuthService {
   }
 
   async login(
-    loginDto: LoginDto,
+    login: string,
+    password: string,
   ): Promise<{ accessToken: string; refreshToken?: string }> {
-    const user = await this.usersService.findByLogin(loginDto);
+    const user = await this.usersService.findByLogin(login);
 
     if (!user) {
       throw new HttpException(
@@ -27,7 +28,6 @@ export class AuthService {
       );
     }
 
-    //  JWTтокены для пользователя ??
     const payload = { userId: user.id, login: user.login };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, { expiresIn: '1h' }),

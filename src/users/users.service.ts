@@ -9,7 +9,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LoginDto } from 'src/auth/dto/create-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -115,17 +114,16 @@ export class UsersService {
 
     await this.prisma.user.delete({ where: { id } });
   }
-  async findByLogin(loginDto: LoginDto): Promise<User | null> {
-    // const { login, password } = loginDto;
 
-    const { login } = loginDto;
+  async findByLogin(login: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: {
         login,
       },
     });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     return user;
   }
-
-
 }
