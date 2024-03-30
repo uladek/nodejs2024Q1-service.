@@ -10,6 +10,8 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
@@ -125,5 +127,13 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  async validatePassword(login: string, password: string): Promise<boolean> {
+    const user = await this.findByLogin(login);
+    if (!user) {
+      return false;
+    }
+    return bcrypt.compare(password, user.password);
   }
 }
