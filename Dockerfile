@@ -32,4 +32,4 @@ EXPOSE 4000
 # CMD ["npm", "run", "docker:start"]
 # CMD ["npm", "run", "docker:start2"]
 # CMD npx prisma migrate deploy && npx prisma generate && npm run start:dev
-CMD npx prisma migrate deploy && npx prisma generate && npm run start:dev
+CMD npx prisma migrate dev && npx prisma generate && npm run start:dev

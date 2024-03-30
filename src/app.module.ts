@@ -13,6 +13,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
 import { UsersService } from './users/users.service';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -20,15 +23,22 @@ import { UsersService } from './users/users.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: process.env.TOKEN_EXPIRE_TIME },
+    }),
+
     ArtistsModule,
     TracksModule,
     AlbumsModule,
     DataBaseModule,
     FavoritesModule,
     PrismaModule,
+    // AuthModule,
   ],
   controllers: [AppController],
   providers: [
+    AuthService,
     AppService,
     PrismaService,
     UsersService,
