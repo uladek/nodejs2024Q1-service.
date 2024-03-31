@@ -19,6 +19,15 @@ export class LoginDto {
   @IsString()
   password: string;
 }
+// export class LoginDto {
+//   @IsNotEmpty()
+//   @IsString()
+//   id: string;
+
+//   @IsNotEmpty()
+//   @IsString()
+//   login: string;
+// }
 
 export class RefreshDto {
   @IsNotEmpty()

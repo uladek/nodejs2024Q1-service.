@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { RefreshDto, SignupDto } from './dto/create-auth.dto';
+import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -11,10 +11,6 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-
-  // async signup(signupDto: SignupDto): Promise<User> {
-  //   return await this.usersService.create(signupDto);
-  // }
 
   async signup(signupDto: SignupDto): Promise<User> {
     const { password, ...userData } = signupDto;
@@ -30,10 +26,7 @@ export class AuthService {
     return newUser;
   }
 
-  async login(
-    login: string,
-    password: string,
-  ): Promise<{ accessToken: string; refreshToken?: string }> {
+  async login(login: string, password: string) {
     const user = await this.usersService.findByLogin(login);
 
     if (!user) {
@@ -43,17 +36,6 @@ export class AuthService {
       );
     }
 
-    // const isPasswordValid = await this.usersService.validatePassword(
-    //   login,
-    //   password,
-    // );
-    // if (!isPasswordValid) {
-    //   throw new HttpException(
-    //     'Invalid login credentials',
-    //     HttpStatus.UNAUTHORIZED,
-    //   );
-    // }
-
     const isPasswordValid = await this.validateUser(login, password);
     if (!isPasswordValid) {
       throw new HttpException(
@@ -61,10 +43,18 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const payload = { userId: user.id, login: user.login };
+
+    const payload = { id: user.id, login: user.login };
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, { expiresIn: '1h' }),
-      this.jwtService.signAsync(payload, { expiresIn: '24h' }),
+      this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET_KEY,
+
+        expiresIn: process.env.TOKEN_EXPIRE_TIME,
+      }),
+      this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET_KEY,
+        expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+      }),
     ]);
 
     return { accessToken, refreshToken };

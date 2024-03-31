@@ -23,22 +23,17 @@ import { AuthService } from './auth/auth.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: process.env.TOKEN_EXPIRE_TIME },
-    }),
-
     ArtistsModule,
     TracksModule,
     AlbumsModule,
     DataBaseModule,
     FavoritesModule,
     PrismaModule,
-    // AuthModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
-    AuthService,
+    // AuthService,
     AppService,
     PrismaService,
     UsersService,
