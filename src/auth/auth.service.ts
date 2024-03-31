@@ -15,8 +15,8 @@ export class AuthService {
   async signup(signupDto: SignupDto): Promise<User> {
     const { password, ...userData } = signupDto;
 
-    const saltOrRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+    const SALT = Number(process.env.CRYPT_SALT);
+    const hashedPassword = await bcrypt.hash(password, SALT);
 
     const newUser = await this.usersService.create({
       ...userData,
@@ -62,12 +62,12 @@ export class AuthService {
   async refresh(
     refreshDto: RefreshDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    if (!refreshDto?.refreshToken) {
-      throw new HttpException(
-        'Invalid or missing refreshToken',
-        HttpStatus.FORBIDDEN,
-      );
-    }
+    // if (!refreshDto?.refreshToken) {
+    //   throw new HttpException(
+    //     'Invalid or missing refreshToken',
+    //     HttpStatus.FORBIDDEN,
+    //   );
+    // }
 
     try {
       const decodedToken = await this.jwtService.verify(

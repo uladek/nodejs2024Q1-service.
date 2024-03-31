@@ -1,21 +1,21 @@
-// import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
-// import { ExtractJwt, Strategy } from 'passport-jwt';
-// import { PassportStrategy } from '@nestjs/passport';
-// import { Injectable } from '@nestjs/common';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
 
-// @Injectable()
-// export class JwtStrategy extends PassportStrategy(Strategy) {
-//   //   constructor(private readonly configService: ConfigService) {
-//   constructor() {
-//     super({
-//       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-//       ignoreExpiration: false,
-//       secretOrKey: process.env.JWT_SECRET_KEY,
-//     });
-//   }
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_SECRET_KEY,
+    });
+  }
 
-//   async validate(payload: any) {
-//     return { userId: payload.sub, username: payload.username };
-//   }
-// }
+  async validate(payload: { userId: string; login: string }) {
+    const { userId, login } = payload;
+    return { userId, login };
+  }
+}

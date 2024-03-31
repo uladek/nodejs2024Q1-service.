@@ -9,6 +9,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +22,9 @@ export class UsersService {
       throw new HttpException('Login and password are required', 400);
     }
 
+    const SALT = Number(process.env.CRYPT_SALT);
+    const hashedPassword = await bcrypt.hash(password, SALT);
+
     console.log('Creating user with login:', login);
 
     const { ...userData } = createUserDto;
@@ -28,6 +33,7 @@ export class UsersService {
     const newUser = await this.prisma.user.create({
       data: {
         ...userData,
+        password: hashedPassword,
         version: 1,
         createdAt: createdAt,
         updatedAt: updatedAt,
@@ -86,15 +92,18 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    if (user.password !== oldPassword) {
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
       throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
     }
+
+    const SALT = Number(process.env.CRYPT_SALT);
+    const hashedNewPassword = await bcrypt.hash(newPassword, SALT);
 
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
-        password: newPassword,
+        password: hashedNewPassword,
         version: user.version + 1,
         updatedAt: new Date(),
       },
@@ -126,12 +135,4 @@ export class UsersService {
     }
     return user;
   }
-
-  // async validatePassword(login: string, password: string): Promise<boolean> {
-  //   const user = await this.findByLogin(login);
-  //   if (!user) {
-  //     return false;
-  //   }
-  //   return bcrypt.compare(password, user.password);
-  // }
 }
