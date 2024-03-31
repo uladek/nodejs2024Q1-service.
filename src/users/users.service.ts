@@ -10,8 +10,6 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import * as bcrypt from 'bcrypt';
-
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}

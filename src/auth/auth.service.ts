@@ -40,7 +40,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new HttpException(
         'Invalid login credentials',
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
 
@@ -48,7 +48,6 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET_KEY,
-
         expiresIn: process.env.TOKEN_EXPIRE_TIME,
       }),
       this.jwtService.sign(payload, {
@@ -60,21 +59,43 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refresh(refreshDto: RefreshDto): Promise<{ accessToken: string }> {
+  async refresh(
+    refreshDto: RefreshDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    if (!refreshDto?.refreshToken) {
+      throw new HttpException(
+        'Invalid or missing refreshToken',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     try {
-      const decodedToken = await this.jwtService.verifyAsync(
+      const decodedToken = await this.jwtService.verify(
         refreshDto.refreshToken,
       );
       const userId = decodedToken.userId;
-      const payload = { userId };
-      const accessToken = await this.jwtService.signAsync(payload, {
-        expiresIn: '1h',
-      });
-      return { accessToken };
+      const user = await this.usersService.findOne(userId);
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+      const { id, login } = user;
+
+      const payload = { userId: id, login: login };
+
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.sign(payload, {
+          expiresIn: process.env.TOKEN_EXPIRE_TIME,
+        }),
+        this.jwtService.sign(payload, {
+          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+        }),
+      ]);
+
+      return { accessToken, refreshToken };
     } catch (error) {
       throw new HttpException(
         'Invalid or expired refresh token',
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
   }

@@ -5,10 +5,10 @@ import {
   HttpStatus,
   HttpCode,
   UseGuards,
+
 } from '@nestjs/common';
 import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './auth.guard';
 
 @Controller('auth')
