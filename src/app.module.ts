@@ -44,6 +44,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
       provide: APP_FILTER,
       useClass: PrismaExceptionFilter,
     },
+
     LoggingService,
   ],
 })
