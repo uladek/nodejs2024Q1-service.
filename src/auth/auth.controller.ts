@@ -1,18 +1,8 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpStatus,
-  HttpCode,
-  UseGuards,
-  Get,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
+// import { LocalAuthGuard } from './auth.guard';
+// import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -21,8 +11,8 @@ export class AuthController {
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() signupDto: SignupDto) {
-    await this.authService.signup(signupDto);
-    return { message: 'Created  new user' };
+    return await this.authService.signup(signupDto);
+    // return { message: 'Created  new user' };
   }
 
   @Post('login')

@@ -33,7 +33,7 @@ import { AuthService } from './auth/auth.service';
   ],
   controllers: [AppController],
   providers: [
-    // AuthService,
+    AuthService,
     AppService,
     PrismaService,
     UsersService,

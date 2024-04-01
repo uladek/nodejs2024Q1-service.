@@ -94,7 +94,8 @@ export class UsersService {
     }
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
-      throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
+      // throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
+      throw new ForbiddenException('Old password is incorrect');
     }
 
     const SALT = Number(process.env.CRYPT_SALT);

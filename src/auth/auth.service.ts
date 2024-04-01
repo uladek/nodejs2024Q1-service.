@@ -35,8 +35,9 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-
+    
     const isPasswordValid = await this.validateUser(login, password);
+    // const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       throw new HttpException(
         'Invalid login credentials',
@@ -106,5 +107,6 @@ export class AuthService {
       return user;
     }
     return null;
+    // throw new ForbiddenException('Invalid credentials');
   }
 }
