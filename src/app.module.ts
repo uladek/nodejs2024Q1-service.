@@ -15,7 +15,8 @@ import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
 import { UsersService } from './users/users.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
-import { LoggerService } from './logger/logger.service';
+import { LoggingService } from './logger/logger.service';
+import { LoggingModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { LoggerService } from './logger/logger.service';
     FavoritesModule,
     PrismaModule,
     AuthModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [
@@ -41,7 +43,7 @@ import { LoggerService } from './logger/logger.service';
       provide: APP_FILTER,
       useClass: PrismaExceptionFilter,
     },
-    LoggerService,
+    LoggingService,
   ],
 })
 export class AppModule {}
