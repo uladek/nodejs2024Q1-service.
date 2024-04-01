@@ -21,11 +21,11 @@ export class AuthController {
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() signupDto: SignupDto) {
-    return await this.authService.signup(signupDto);
+    await this.authService.signup(signupDto);
+    return { message: 'Created  new user' };
   }
 
   @Post('login')
-  @UseGuards(LocalAuthGuard)
   // @UseGuards(LocalAuthGuard)
   async login(@Body() loginDto: LoginDto) {
     const { login, password } = loginDto;
@@ -33,7 +33,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @UsePipes(new ValidationPipe())
   // @UseGuards(JwtAuthGuard)
   async refresh(@Body() refreshDto: RefreshDto) {
     return await this.authService.refresh(refreshDto);

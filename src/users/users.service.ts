@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -10,7 +11,6 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -108,6 +108,7 @@ export class UsersService {
         updatedAt: new Date(),
       },
     });
+
     return plainToClass(User, {
       ...updatedUser,
       createdAt: updatedUser.createdAt.getTime(),
