@@ -56,8 +56,10 @@ export class AuthService {
       const decodedToken = await this.jwtService.verify(
         refreshDto.refreshToken,
       );
+
       const userId = decodedToken.userId;
       const user = await this.usersService.findOne(userId);
+
       if (!user) {
         throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
       }

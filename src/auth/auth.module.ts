@@ -5,7 +5,6 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthJWTGuard } from './jwt-auth.guard';
 
@@ -14,13 +13,11 @@ import { AuthJWTGuard } from './jwt-auth.guard';
   providers: [
     AuthService,
     LocalStrategy,
-    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: AuthJWTGuard,
     },
   ],
-  // providers: [AuthService, JwtService, LocalStrategy, JwtStrategy],
 
   imports: [
     UsersModule,
@@ -32,15 +29,6 @@ import { AuthJWTGuard } from './jwt-auth.guard';
       }),
       global: true,
     },
-
-    // JwtModule.registerAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => ({
-    //     secret: configService.get('JWT_SECRET_KEY'),
-    //     signOptions: { expiresIn: process.env.TOKEN_EXPIRE_TIME },
-    //   }),
-    //   inject: [ConfigService],
-    // }),
   ],
 })
 export class AuthModule {}

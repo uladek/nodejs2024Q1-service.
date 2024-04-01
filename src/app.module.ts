@@ -13,9 +13,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
 import { UsersService } from './users/users.service';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
+import { LoggerService } from './logger/logger.service';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { AuthService } from './auth/auth.service';
       provide: APP_FILTER,
       useClass: PrismaExceptionFilter,
     },
+    LoggerService,
   ],
 })
 export class AppModule {}

@@ -43,6 +43,8 @@ switch to __docker_db__
      npm install
   ```
   ```
+    prisma generate
+    npx prisma migrate dev --name init
     docker-compose up --build
   ```
   ```

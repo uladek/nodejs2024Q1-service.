@@ -6,6 +6,7 @@ import {
   HttpCode,
   ValidationPipe,
   UsePipes,
+  HttpException,
 } from '@nestjs/common';
 import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
@@ -36,6 +37,13 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   async refresh(@Body() refreshDto: RefreshDto) {
+    const { refreshToken } = refreshDto;
+    if (!refreshToken) {
+      throw new HttpException(
+        'No refresh token provided',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     return await this.authService.refresh(refreshDto);
   }
 }
