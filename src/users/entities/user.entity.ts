@@ -27,6 +27,9 @@ export class User {
   login: string;
 
   @Exclude()
+  token: string;
+
+  @Exclude()
   password: string;
   version: number;
   createdAt: Date;
@@ -35,6 +38,7 @@ export class User {
   constructor(
     id: string,
     login: string,
+    token: string,
     password: string,
     version: number,
     createdAt: Date,
@@ -42,6 +46,7 @@ export class User {
   ) {
     this.id = id;
     this.login = login;
+    this.token = token;
     this.password = password;
     this.version = version;
     this.createdAt = createdAt;

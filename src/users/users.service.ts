@@ -1,7 +1,6 @@
 import {
   ForbiddenException,
   HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -47,32 +46,10 @@ export class UsersService {
     });
   }
 
-  // async findAll(): Promise<User[]> {
-  //   const users = await this.prisma.user.findMany();
-  //   return users.map((user) => ({
-  //     ...user,
-  //     createdAt: user.createdAt.getTime(),
-  //     updatedAt: user.updatedAt.getTime(),
-  //   }));
-  // }
-
   async findAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany();
     return users;
   }
-
-  // async findOne(id: string): Promise<User> {
-  //   const user = await this.prisma.user.findUnique({ where: { id } });
-  //   if (!user) {
-  //     throw new NotFoundException('User not found');
-  //   }
-
-  //   return {
-  //     ...user,
-  //     createdAt: user.createdAt.getTime(),
-  //     updatedAt: user.updatedAt.getTime(),
-  //   };
-  // }
 
   async findOne(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
@@ -94,7 +71,6 @@ export class UsersService {
     }
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
-      // throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
       throw new ForbiddenException('Old password is incorrect');
     }
 

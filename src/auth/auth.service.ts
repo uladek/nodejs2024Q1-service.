@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto, RefreshDto, SignupDto } from './dto/create-auth.dto';
+import { RefreshDto, SignupDto } from './dto/create-auth.dto';
 import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -13,17 +13,7 @@ export class AuthService {
   ) {}
 
   async signup(signupDto: SignupDto): Promise<User> {
-    const { password, ...userData } = signupDto;
-
-    const SALT = Number(process.env.CRYPT_SALT);
-    const hashedPassword = await bcrypt.hash(password, SALT);
-
-    const newUser = await this.usersService.create({
-      ...userData,
-      password: hashedPassword,
-    });
-
-    return newUser;
+    return await this.usersService.create(signupDto);
   }
 
   async login(login: string, password: string) {
@@ -35,17 +25,16 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    
+
     const isPasswordValid = await this.validateUser(login, password);
-    // const isPasswordValid = await bcrypt.compare(password, user.password)
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new HttpException(
         'Invalid login credentials',
         HttpStatus.FORBIDDEN,
       );
     }
-
-    const payload = { id: user.id, login: user.login };
+    const payload = { userId: user.id, login: user.login };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET_KEY,
@@ -63,13 +52,6 @@ export class AuthService {
   async refresh(
     refreshDto: RefreshDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    // if (!refreshDto?.refreshToken) {
-    //   throw new HttpException(
-    //     'Invalid or missing refreshToken',
-    //     HttpStatus.FORBIDDEN,
-    //   );
-    // }
-
     try {
       const decodedToken = await this.jwtService.verify(
         refreshDto.refreshToken,
@@ -107,6 +89,5 @@ export class AuthService {
       return user;
     }
     return null;
-    // throw new ForbiddenException('Invalid credentials');
   }
 }
