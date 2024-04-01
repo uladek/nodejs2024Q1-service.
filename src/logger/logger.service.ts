@@ -21,4 +21,28 @@ export class LoggingService implements LoggerService {
   verbose(message: string) {
     console.log(message);
   }
+
+  logError(error: Error, context?: string) {
+    const errorMessage = context
+      ? `[${context}] ${error.message}`
+      : error.message;
+    this.error(errorMessage, error.stack);
+  }
+
+  listenToUncaughtExceptions() {
+    process.on('uncaughtException', (error: Error) => {
+      this.logError(error, 'Uncaught Exception');
+      process.exit(1);
+    });
+  }
+
+  listenToUnhandledRejections() {
+    process.on('unhandledRejection', (reason: PromiseRejectionEvent) => {
+      const errorMessage = reason.reason
+        ? reason.reason.toString()
+        : 'Unhandled Promise Rejection';
+      const stackTrace = reason.reason ? reason.reason.stack : '';
+      this.error(`Unhandled Rejection: ${errorMessage}`, stackTrace);
+    });
+  }
 }
