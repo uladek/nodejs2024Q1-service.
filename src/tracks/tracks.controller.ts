@@ -24,32 +24,32 @@ export class TracksController {
   @Post()
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTrackDto: CreateTrackDto): Track {
+  async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(createTrackDto);
   }
 
   @Get()
-  findAll(): Track[] {
+  async findAll(): Promise<Track[]> {
     return this.tracksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Track {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
     return this.tracksService.findOne(id);
   }
 
   @Put(':id')
   @UsePipes(new ValidationPipe())
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): Track {
+  ): Promise<Track> {
     return this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.tracksService.remove(id);
   }
 }

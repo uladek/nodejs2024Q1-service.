@@ -24,32 +24,32 @@ export class UsersController {
   @Post()
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
-  createUser(@Body() createUserDto: CreateUserDto): User {
-    return this.usersService.create(createUserDto);
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll(): User[] {
-    return this.usersService.findAll();
+  async findAll(): Promise<User[]> {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): User {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+    return await this.usersService.findOne(id);
   }
 
   @Put(':id')
   @UsePipes(new ValidationPipe())
-  updatePassword(
+  async updatePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): User {
-    return this.usersService.updatePassword(id, updatePasswordDto);
+  ): Promise<User> {
+    return await this.usersService.updatePassword(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.usersService.remove(id);
   }
 }
