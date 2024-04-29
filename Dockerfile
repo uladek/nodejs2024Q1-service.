@@ -5,8 +5,7 @@ FROM node:20.11-alpine AS development
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-
-# RUN apk add --no-cache libxml2@2.12.5-r0
+COPY prisma ./prisma/
 
 RUN npm install
 
@@ -19,6 +18,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+COPY prisma ./prisma/
+
 RUN npm install --only=production
 # RUN npm install && nest build
 
@@ -28,4 +29,7 @@ EXPOSE 4000
 
 # CMD ["npm", "run", "start:dev"]
 
-CMD ["npm", "run", "docker:start"]
+# CMD ["npm", "run", "docker:start"]
+# CMD ["npm", "run", "docker:start2"]
+# CMD npx prisma migrate deploy && npx prisma generate && npm run start:dev
+CMD npx prisma migrate dev && npx prisma generate && npm run start:dev

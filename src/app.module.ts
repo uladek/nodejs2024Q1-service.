@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -13,6 +13,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
 import { UsersService } from './users/users.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { LoggingService } from './logger/logger.service';
+import { LoggingModule } from './logger/logger.module';
+import { LoggerMiddleware } from './logger/logger.middleware';
 
 @Module({
   imports: [
@@ -26,9 +31,12 @@ import { UsersService } from './users/users.service';
     DataBaseModule,
     FavoritesModule,
     PrismaModule,
+    AuthModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [
+    AuthService,
     AppService,
     PrismaService,
     UsersService,
@@ -36,6 +44,12 @@ import { UsersService } from './users/users.service';
       provide: APP_FILTER,
       useClass: PrismaExceptionFilter,
     },
+
+    LoggingService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
